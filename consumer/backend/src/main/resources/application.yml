@@ -1,0 +1,18 @@
+consumer.queue.message: consumer_queue_message
+spring:
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/trainingaws?currentSchema=trainingaws'
+    username: trainingaws
+    password: trainingaws
+    driver-class-name: org.postgresql.Driver
+server:
+  port: 2011
+logging:
+  level.loggers.org.skife.jdbi.v2: TRACE
+cloud.aws:
+  stack.auto: false
+  region:
+    static: us-east-2
+  credentials:
+    accessKey: AKIA4EQKCAN4KLX33YMT
+    secretKey: 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

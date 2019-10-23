@@ -1,0 +1,8 @@
+{
+  "DelaySeconds": "10",
+  "MaximumMessageSize": "131072",
+  "MessageRetentionPeriod": "259200",
+  "ReceiveMessageWaitTimeSeconds": "20",
+  "RedrivePolicy": "{\"deadLetterTargetArn\":\"arn:aws:sqs:us-east-2:834318500728:consumer_queue_message_dead_letter\",\"maxReceiveCount\":\"1000\"}",
+  "VisibilityTimeout": "60"
+}
