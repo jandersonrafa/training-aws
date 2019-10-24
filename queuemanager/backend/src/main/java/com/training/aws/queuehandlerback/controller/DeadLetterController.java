@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dead-letter")
+@RequestMapping("/api/dead-letter")
 public class DeadLetterController {
 
     @Autowired
@@ -35,15 +35,15 @@ public class DeadLetterController {
     }
 
     @PutMapping("/resubmit/{id}")
-    public void resend(@PathVariable("id") String id, @RequestParam("resubmitMessage") String resubmitMessage) throws JsonProcessingException {
-        jdbi.withExtension(DeadLetterRepository.class, repository -> repository.update(id, TypeAction.RESUBMITTED.name(), "", resubmitMessage));
+    public void resend(@PathVariable("id") String id, @RequestBody DeadLetter deadLetterRes) throws JsonProcessingException {
+        jdbi.withExtension(DeadLetterRepository.class, repository -> repository.update(id, TypeAction.RESUBMITTED.name(), "", deadLetterRes.getResubmitMessage()));
         DeadLetter deadLetter = jdbi.withExtension(DeadLetterRepository.class, repository -> repository.findById(id));
 
         ObjectMapper mapper = new ObjectMapper();
 
         final SendMessageRequest sendMessageRequest = new SendMessageRequest()
                 .withQueueUrl(deadLetter.getQueueName())
-                .withMessageBody(resubmitMessage)
+                .withMessageBody(deadLetterRes.getResubmitMessage())
 //                .withMessageAttributes(mapper.readValue(deadLetter.getOriginalHeaders(), Map.class))
                 ;
 

@@ -1,5 +1,8 @@
 consumer.queue.message.dead.letter: consumer_queue_message_dead_letter
+
 spring:
+  mvc:
+    dispatch-options-request=true:
   datasource:
     url: 'jdbc:postgresql://localhost:5432/trainingaws?currentSchema=trainingaws'
     username: trainingaws
