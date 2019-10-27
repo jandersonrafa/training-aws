@@ -13,6 +13,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class DeadLetterListenerService {
         // Do something
         jdbi.withExtension(DeadLetterRepository.class, repository -> {
             DeadLetter user = new DeadLetter();
-            user.setQueueName(attributes.get("originalQueueName"));
+            user.setQueueName(Optional.ofNullable(attributes.get("originalQueueName")).orElse("consumer_queue_message"));
             user.setId(UUID.randomUUID().toString());
             user.setOriginalHeaders(mapper.writeValueAsString(attributes));
             user.setOriginalMessage(message);

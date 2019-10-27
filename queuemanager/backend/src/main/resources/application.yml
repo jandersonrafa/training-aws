@@ -9,7 +9,7 @@ spring:
     password: trainingaws
     driver-class-name: org.postgresql.Driver
 server:
-  port: 2010
+  port: 8081
 logging:
   level.loggers.org.skife.jdbi.v2: TRACE
 cloud.aws:
@@ -19,3 +19,22 @@ cloud.aws:
   credentials:
     accessKey: AKIA4EQKCAN4KLX33YMT
     secretKey: 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
+---
+
+spring:
+  profiles: test
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/trainingaws?currentSchema=trainingaws'
+    username: trainingaws
+    password: trainingaws
+    driver-class-name: org.postgresql.Driver
+
+---
+
+spring:
+  profiles: prod
+  datasource:
+    url: 'jdbc:postgresql://192.168.15.6:5432/trainingaws?currentSchema=trainingaws'
+    username: trainingaws
+    password: trainingaws
+    driver-class-name: org.postgresql.Driver
