@@ -12,7 +12,7 @@ logging:
 cloud.aws:
   stack.auto: false
   region:
-    static: us-east-1
+    static: 
   credentials:
-    accessKey: AKIA4EQKCAN4CKAGVGWS
-    secretKey: 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
+    accessKey: 
+    secretKey: 
