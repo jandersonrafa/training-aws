@@ -4,7 +4,7 @@ spring:
   mvc:
     dispatch-options-request=true:
   datasource:
-    url: 'jdbc:postgresql://ta-db.cqecl36zqdfl.us-east-1.rds.amazonaws.com:5432/trainingaws?currentSchema=trainingaws'
+    url: 'jdbc:postgresql://localhost:5432/trainingaws?currentSchema=trainingaws'
     username: trainingaws
     password: trainingaws
     driver-class-name: org.postgresql.Driver
@@ -15,10 +15,10 @@ logging:
 cloud.aws:
   stack.auto: false
   region:
-    static: us-east-1
+    static: 
   credentials:
-    accessKey: AKIA4EQKCAN4CKAGVGWS
-    secretKey: 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
+    accessKey: 
+    secretKey: 
 ---
 
 spring:
@@ -34,7 +34,7 @@ spring:
 spring:
   profiles: prod
   datasource:
-    url: 'jdbc:postgresql://ta-db.cqecl36zqdfl.us-east-1.rds.amazonaws.com:5432/trainingaws?currentSchema=trainingaws'
+    url: 'jdbc:postgresql://localhost:5432/trainingaws?currentSchema=trainingaws'
     username: trainingaws
     password: trainingaws
     driver-class-name: org.postgresql.Driver
