@@ -1,5 +1,6 @@
 package com.training.aws.queuehandlerback.config;
 
+import com.training.aws.queuehandlerback.dto.DeadLetterListingDto;
 import com.training.aws.queuehandlerback.model.DeadLetter;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
@@ -25,6 +26,7 @@ public class PersistenceConfiguration {
         jdbi.installPlugins();
 
         jdbi.registerRowMapper(DeadLetter.class, ConstructorMapper.of(DeadLetter.class));
+        jdbi.registerRowMapper(DeadLetterListingDto.class, ConstructorMapper.of(DeadLetterListingDto.class));
 
         return jdbi;
     }

@@ -14,8 +14,10 @@ CREATE TABLE trainingaws.deadLetter (
 	queueName varchar(100) NOT NULL,
 	originalMessage varchar(4000) NOT NULL,
 	originalHeaders varchar(4000) NOT NULL,
+	filteredOriginalHeaders varchar(4000) NULL,
 	resubmitMessage varchar(4000) NULL,
 	resubmitHeaders varchar(4000) NULL,
+	resubmitQueueName varchar(4000) NULL,
 	typeAction varchar(15) NOT NULL,
 	CONSTRAINT deadletter_pkey PRIMARY KEY (id)
 );

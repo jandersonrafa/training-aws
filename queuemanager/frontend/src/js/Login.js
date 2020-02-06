@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, CardTitle, TextInput, Collection, CollectionItem } from 'react-materialize';
+import { Row, Col, Card, CardTitle, TextInput, Collection, CollectionItem, Textarea } from 'react-materialize';
 import HighlightedButton from './HighlightedButton';
 import { updateAuth } from './actions';
 import { bindActionCreators } from 'redux';
@@ -35,7 +35,8 @@ class Login extends Component {
   state = {
     results: [],
     messageSelected: {
-      originalHeaders: '',
+      filteredOriginalHeaders: '',
+      typeAction: '',
       originalMessage: ''
     },
     form: {
@@ -57,38 +58,74 @@ class Login extends Component {
     this.setState({
       messageSelected: row,
     });
-    this.setState({ form: { ...this.state.form, id: row.id } });
+
+    this.setState({
+      form: {
+        ...this.state.form, id: row.id, resubmitHeaders: this.formatJson(row.resubmitHeaders)
+        , resubmitMessage: this.formatJson(row.resubmitMessage),
+        resubmitQueueName: row.resubmitQueueName
+      }
+    });
   }
 
   removeMessage() {
-    remove(this.state.form.id, this.state.form)
-      .then(
-        (result) => {
-          alertSuccess('Mensagem excluido com sucesso!')
-        },
-        (error) => {
-          alertError('Erro ao excluir', error.response.data.message)
-        }
-      )
-    event.preventDefault()
+    let confirm = true
+    if (this.state.messageSelected.typeAction === 'RESUBMITTED') {
+      confirm = window.confirm("Mensagem já excluída, deseja continuar?");
+    }
+
+    if (confirm) {
+
+      remove(this.state.form.id, this.state.form)
+        .then(
+          (result) => {
+            alertSuccess('Mensagem excluída com sucesso!')
+            this.setState({
+              messageSelected: {
+                ...this.state.messageSelected, typeAction: 'DELETED'
+              }
+            });
+          },
+          (error) => {
+            alertError('Erro ao excluir', error.response.data.message)
+          }
+        )
+      event.preventDefault()
+    }
   }
   resubmitMessage() {
-    resubmit(this.state.form.id, this.state.form)
-      .then(
-        (result) => {
-          alertSuccess('Mensagem reenviada com sucesso!')
-        },
-        (error) => {
-          alertError('Erro ao reenviar mensagem', '')
-        }
-      )
-    event.preventDefault()
+    let confirm = true
+    if (this.state.messageSelected.typeAction === 'RESUBMITTED') {
+      confirm = window.confirm("Mensagem já reenviada, deseja continuar?");
+    }
+
+    if (confirm) {
+      resubmit(this.state.form.id, this.state.form)
+        .then(
+          (result) => {
+            alertSuccess('Mensagem reenviada com sucesso!')
+            this.setState({
+              messageSelected: {
+                ...this.state.messageSelected, typeAction: 'RESUBMITTED'
+              }
+            });
+          },
+          (error) => {
+            alertError('Erro ao reenviar mensagem', '')
+          }
+        )
+      event.preventDefault()
+    }
   }
 
   renderList(row, index) {
     return (<CollectionItem className={row.active ? 'active' : ''} href="javascript:;" onClick={() => this.clickResults(row, index)}>
       {index} - {row.queueName} - {row.typeAction}
     </CollectionItem>)
+  }
+
+  formatJson(content) {
+    return content ? JSON.stringify(JSON.parse(content), null, 2) : content
   }
 
   render() {
@@ -104,7 +141,7 @@ class Login extends Component {
               </Collection>
             </Card>
           </Col>
-          <Col m={6} s={12}>
+          <Col m={7} s={12}>
             <form>
               <Card header={<CardTitle />}
                 actions={[
@@ -120,12 +157,17 @@ class Login extends Component {
                   <hr></hr>
                   <Row>
                     <Col m={12} s={12}>
-                      <TextInput m={3} s={3} value={this.state.messageSelected.originalHeaders} label="Headers" />
-                      <TextInput m={9} s={9} value={this.state.messageSelected.originalMessage} label="Message" />
+                      <h6>Mensagem original</h6>
+                      <TextInput m={9} s={9} disabled value={this.state.messageSelected.queueName} label="Original Queue" />
+                      <TextInput m={3} s={3} disabled value={this.state.messageSelected.typeAction} label="Status" />
+                      <Textarea m={12} s={12} disabled value={this.state.messageSelected.filteredOriginalHeaders} label="Headers" />
+                      <Textarea m={12} s={12} disabled value={this.state.messageSelected.originalMessage} label="Message" />
                     </Col>
                     <Col m={12} s={12}>
-                      <TextInput m={3} s={3}  name='resubmitHeaders' value={this.state.form.resubmitHeaders} onChange={this.handleChange} label="Change Headers" />
-                      <TextInput m={9} s={9}  name='resubmitMessage' value={this.state.form.resubmitMessage} onChange={this.handleChange} label="Change Message" />
+                      <h6>Opções de reenvio</h6>
+                      <Textarea m={12} s={12} name='resubmitHeaders' value={this.state.form.resubmitHeaders} onChange={this.handleChange} label="Change Headers" />
+                      <Textarea m={12} s={12} name='resubmitMessage' value={this.state.form.resubmitMessage} onChange={this.handleChange} label="Change Message" />
+                      <TextInput m={12} s={12} name='resubmitQueueName' value={this.state.form.resubmitQueueName} onChange={this.handleChange} label="Destination Queue" />
                     </Col>
                   </Row>
                 </div>
@@ -136,7 +178,9 @@ class Login extends Component {
       </div>
     );
   }
+
 }
+
 
 const mapStateToProps = store => ({
   auth: store.authState.auth,

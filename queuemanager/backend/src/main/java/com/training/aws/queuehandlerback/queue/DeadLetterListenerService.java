@@ -1,7 +1,9 @@
 package com.training.aws.queuehandlerback.queue;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.training.aws.queuehandlerback.domain.TypeAction;
+import com.training.aws.queuehandlerback.domain.TypeFilteredHeaders;
 import com.training.aws.queuehandlerback.model.DeadLetter;
 import com.training.aws.queuehandlerback.repository.DeadLetterRepository;
 import org.jdbi.v3.core.Jdbi;
@@ -12,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,12 +38,25 @@ public class DeadLetterListenerService {
             DeadLetter user = new DeadLetter();
             user.setQueueName(Optional.ofNullable(attributes.get("originalQueueName")).orElse("consumer_queue_message"));
             user.setId(UUID.randomUUID().toString());
-            user.setOriginalHeaders(mapper.writeValueAsString(attributes));
+            user.setOriginalHeaders(mapToString(mapper, attributes));
+            user.setFilteredOriginalHeaders(mapper.writeValueAsString(filteredHeaders(messageAttributes)));
             user.setOriginalMessage(message);
             user.setTypeAction(TypeAction.PENDENT.name());
             return repository.insertBean(user);
         });
 
         System.out.println("Messages content: " + message);
+    }
+
+    private List<Map.Entry<String, String>> filteredHeaders(Map<String, String> messageAttributes) {
+        return messageAttributes
+                .entrySet()
+                .stream()
+                .filter((es) -> TypeFilteredHeaders.getByName(es.getKey()).isPresent())
+                .collect(Collectors.toList());
+    }
+
+    private String mapToString(ObjectMapper mapper, Map<String, String> attributes) throws JsonProcessingException {
+        return mapper.writeValueAsString(attributes);
     }
 }

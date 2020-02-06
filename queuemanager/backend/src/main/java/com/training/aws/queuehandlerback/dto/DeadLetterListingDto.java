@@ -1,4 +1,4 @@
-package com.training.aws.queuehandlerback.model;
+package com.training.aws.queuehandlerback.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import org.jdbi.v3.core.mapper.reflect.JdbiConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DeadLetter {
+public class DeadLetterListingDto {
 
     private String id;
     private String queueName;
@@ -21,7 +21,7 @@ public class DeadLetter {
     private String typeAction;
 
     @JdbiConstructor
-    public DeadLetter(String id, String queueName, String originalHeaders, String filteredOriginalHeaders, String originalMessage,String resubmitMessage, String resubmitHeaders, String resubmitQueueName, String typeAction) {
+    public DeadLetterListingDto(String id, String queueName, String originalHeaders, String filteredOriginalHeaders, String originalMessage, String resubmitMessage, String resubmitHeaders, String resubmitQueueName , String typeAction) {
         this.id = id;
         this.queueName = originalMessage;
         this.originalMessage = originalMessage;
@@ -29,7 +29,7 @@ public class DeadLetter {
         this.filteredOriginalHeaders = filteredOriginalHeaders;
         this.resubmitMessage = resubmitMessage;
         this.resubmitHeaders = resubmitHeaders;
-        this.resubmitQueueName = resubmitQueueName;
         this.typeAction = typeAction;
+        this.resubmitQueueName = resubmitQueueName;
     }
 }

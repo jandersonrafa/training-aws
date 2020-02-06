@@ -4,27 +4,27 @@ spring:
   mvc:
     dispatch-options-request=true:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/trainingaws?currentSchema=trainingaws'
+    url: 'jdbc:postgresql://localhost:5432/marketplace?currentSchema=trainingaws'
     username: trainingaws
     password: trainingaws
     driver-class-name: org.postgresql.Driver
 server:
-  port: 8081
+  port: 8083
 logging:
   level.loggers.org.skife.jdbi.v2: TRACE
 cloud.aws:
   stack.auto: false
-  region:
-    static: 
   credentials:
-    accessKey: 
-    secretKey: 
+    accessKey: ${AWS_ACCESS_KEY_ID:AKIAJEDAAIVKZJRI7ASQ}
+    secretKey: ${AWS_SECRET_ACCESS_KEY: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}
+  region:
+    static: us-east-1
 ---
 
 spring:
   profiles: test
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/trainingaws?currentSchema=trainingaws'
+    url: 'jdbc:postgresql://localhost:5432/marketplace?currentSchema=trainingaws'
     username: trainingaws
     password: trainingaws
     driver-class-name: org.postgresql.Driver
