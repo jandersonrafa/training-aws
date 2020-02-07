@@ -20,10 +20,10 @@ CREATE TABLE trainingaws.deadLetter (
 	resubmitQueueName varchar(4000) NULL,
 	typeAction varchar(15) NOT NULL,
 	createdDate TIMESTAMP default now(),
-	updateDate TIMESTAMP,
+	updatedDate TIMESTAMP,
 	CONSTRAINT deadletter_pkey PRIMARY KEY (id)
 );
-
+consumer_queue_message_dead_letter
 # deadletter example
 INSERT INTO trainingaws.deadletter
 (id, queuename, originalmessage, originalheaders, resubmitmessage, resubmitheaders, typeaction, filteredoriginalheaders, resubmitqueuename)
