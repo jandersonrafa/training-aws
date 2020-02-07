@@ -21,11 +21,19 @@ public interface DeadLetterRepository {
     @RegisterBeanMapper(DeadLetterListingDto.class)
     Stream<DeadLetterListingDto> findAll();
 
+    @SqlQuery("SELECT * FROM deadLetter WHERE typeAction = :typeAction ORDER BY id")
+    @RegisterBeanMapper(DeadLetterListingDto.class)
+    Stream<DeadLetterListingDto> findByTypeAction(@Bind("typeAction") String typeAction);
+
     @SqlUpdate("update deadLetter set typeAction = :typeAction, resubmitHeaders = :resubmitHeaders, resubmitMessage = :resubmitMessage, resubmitQueueName = :resubmitQueueName where id = :id")
     int update(@Bind("id") String id, @Bind("typeAction") String typeAction, @Bind("resubmitHeaders") String resubmitHeaders, @Bind("resubmitMessage") String resubmitMessage, @Bind("resubmitQueueName") String resubmitQueueName);
 
     @SqlQuery("SELECT * FROM deadLetter WHERE id = :id")
     @RegisterBeanMapper(DeadLetter.class)
     DeadLetter findById(@Bind("id") String id);
+
+    @SqlQuery("SELECT * FROM deadLetter WHERE id = :id")
+    @RegisterBeanMapper(DeadLetterListingDto.class)
+    DeadLetterListingDto findDtoById(@Bind("id") String id);
 
 }

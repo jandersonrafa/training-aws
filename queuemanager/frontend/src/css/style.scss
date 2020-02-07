@@ -168,6 +168,14 @@ body {
   }
 }
 
+.login {
+  .collection {
+    .collection-item.active {
+      background-color: #bbb5b5;
+    }
+  }
+}
+
 .login-form {
   margin-top: 35px;
 }
@@ -233,4 +241,9 @@ body {
     margin-top: 7px;
     height: 78% !important;
   }
+}
+
+.messages_filter {
+  display: flex;
+  align-items: center;
 }
