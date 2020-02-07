@@ -1,9 +1,7 @@
 package com.training.aws.queuehandlerback.queue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.training.aws.queuehandlerback.domain.TypeAction;
 import com.training.aws.queuehandlerback.domain.TypeFilteredHeaders;
 import com.training.aws.queuehandlerback.model.DeadLetter;
@@ -16,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,18 +40,10 @@ public class DeadLetterListenerService {
             user.setQueueName(Optional.ofNullable(attributes.get("originalQueueName")).orElse("consumer_queue_message"));
             user.setId(UUID.randomUUID().toString());
             user.setOriginalHeaders(mapToString(mapper, attributes));
-            mapper.configure(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS, true);
-            mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-            mapper.configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true);
-            mapper.configure(SerializationFeature.WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS, true);
-            mapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
-            mapper.configure(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID, true);
-            mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-            mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-            mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
             user.setFilteredOriginalHeaders(mapper.writeValueAsString(filteredHeaders(attributes)));
             user.setOriginalMessage(message);
             user.setTypeAction(TypeAction.PENDENT.name());
+            user.setCreatedDate(LocalDateTime.now());
             return repository.insertBean(user);
         });
 

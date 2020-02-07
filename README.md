@@ -19,6 +19,8 @@ CREATE TABLE trainingaws.deadLetter (
 	resubmitHeaders varchar(4000) NULL,
 	resubmitQueueName varchar(4000) NULL,
 	typeAction varchar(15) NOT NULL,
+	createdDate TIMESTAMP default now(),
+	updateDate TIMESTAMP,
 	CONSTRAINT deadletter_pkey PRIMARY KEY (id)
 );
 

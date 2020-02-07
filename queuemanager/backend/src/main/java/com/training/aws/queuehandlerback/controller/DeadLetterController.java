@@ -16,6 +16,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class DeadLetterController {
 
     @PutMapping("/delete/{id}")
     public void delete(@PathVariable("id") String id) {
-        jdbi.withExtension(DeadLetterRepository.class, repository -> repository.update(id, TypeAction.DELETED.name(), "", "", ""));
+        jdbi.withExtension(DeadLetterRepository.class, repository -> repository.update(id, TypeAction.DELETED.name(), "", "", "", LocalDateTime.now()));
     }
 
     @PutMapping("/resubmit/{id}")
@@ -81,7 +82,7 @@ public class DeadLetterController {
     }
 
     private void resubmit(DeadLetterListingDto dto) {
-        jdbi.withExtension(DeadLetterRepository.class, repository -> repository.update(dto.getId(), TypeAction.RESUBMITTED.name(), dto.getResubmitHeaders(), dto.getResubmitMessage(), dto.getResubmitQueueName()));
+        jdbi.withExtension(DeadLetterRepository.class, repository -> repository.update(dto.getId(), TypeAction.RESUBMITTED.name(), dto.getResubmitHeaders(), dto.getResubmitMessage(), dto.getResubmitQueueName(), LocalDateTime.now()));
         Map<String, MessageAttributeValue> headers = convertHeader(dto.getResubmitHeaders());
         final SendMessageRequest sendMessageRequest = new SendMessageRequest()
                 .withQueueUrl(dto.getResubmitQueueName())
